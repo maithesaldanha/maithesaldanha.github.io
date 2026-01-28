@@ -1,5 +1,10 @@
-const glitch = document.querySelector('.glitch');
+const title = document.querySelector('.glitch');
 
 setInterval(() => {
-  glitch.style.opacity = Math.random() > 0.8 ? '0.7' : '1';
-}, 150);
+  if (Math.random() > 0.85) {
+    title.style.opacity = '0.6';
+    setTimeout(() => {
+      title.style.opacity = '1';
+    }, 80);
+  }
+}, 120);
