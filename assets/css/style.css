@@ -1,6 +1,8 @@
 :root {
-  --bg: #0a0a0a;
-  --fg: #eaeaea;
+  --bg: #0b0b0b;
+  --fg: #e6e6e6;
+  --muted: rgba(255,255,255,0.6);
+  --line: rgba(255,255,255,0.25);
 }
 
 * {
@@ -13,85 +15,80 @@ body {
   color: var(--fg);
   font-family: 'Space Mono', monospace;
   font-size: 14px;
+  line-height: 1.6;
 }
 
+/* scanlines */
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 100% 2px, 3px 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.035),
+    rgba(255,255,255,0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
   pointer-events: none;
-  mix-blend-mode: overlay;
 }
 
 .hud {
   display: grid;
-  grid-template-columns: 260px 1fr 280px;
+  grid-template-columns: 260px 1fr 300px;
   gap: 1.5rem;
   padding: 1.5rem;
   min-height: 100vh;
 }
 
-.left-panel,
-.center-panel,
-.right-panel {
-  border: 1px solid rgba(255,255,255,0.2);
+.panel {
+  border: 1px solid var(--line);
   padding: 1.5rem;
+  position: relative;
 }
 
-.section-title {
+.panel::before {
+  content: "SYS";
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  font-size: 0.6rem;
+  opacity: 0.4;
+}
+
+h1 {
+  font-size: 2.4rem;
+  letter-spacing: 4px;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  top: 0;
+  opacity: 0.25;
+}
+
+h2 {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
   margin-top: 2.5rem;
-  font-size: 0.9rem;
-}
-
-.section-title::before {
-  content: '+ ';
-  opacity: 0.5;
-}
-
-.terminal-menu {
-  padding: 0;
-}
-
-.terminal-menu li {
-  list-style: none;
-  margin-bottom: 0.4rem;
-  opacity: 0.8;
-}
-
-.small-text {
-  opacity: 0.8;
-  line-height: 1.6;
-}
-
-.identity p {
-  margin: 0.2rem 0;
-  opacity: 0.8;
 }
 
 .profile-pic {
-  display: block;
-  width: 180px;
-  margin: 2rem 0;
-  border: 1px solid rgba(255,255,255,0.3);
-  padding: 4px;
+  width: 170px;
+  margin: 1.5rem 0;
   filter: grayscale(100%) contrast(120%);
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1rem;
+  border: 1px solid var(--line);
 }
 
 .chips span {
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid var(--line);
   padding: 0.3rem 0.6rem;
   font-size: 0.7rem;
+  margin-right: 0.4rem;
 }
 
 .job {
@@ -102,40 +99,15 @@ body::before {
   opacity: 0.6;
 }
 
-.tech-list div {
-  border: 1px solid rgba(255,255,255,0.25);
-  padding: 0.5rem;
+.tech-list div,
+.contact a {
+  border: 1px solid var(--line);
+  padding: 0.4rem;
   margin-bottom: 0.4rem;
+  font-size: 0.7rem;
   text-align: center;
-  font-size: 0.75rem;
-}
-
-.simple-list {
-  padding-left: 1rem;
-}
-
-.contact-links a {
-  display: inline-block;
-  margin-right: 0.6rem;
   text-decoration: none;
   color: var(--fg);
-  border: 1px solid rgba(255,255,255,0.3);
-  padding: 0.3rem 0.6rem;
-  font-size: 0.75rem;
-}
-
-.glitch {
-  position: relative;
-  font-size: 2.4rem;
-  letter-spacing: 4px;
-}
-
-.glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 2px;
-  top: 0;
-  opacity: 0.2;
 }
 
 @media (max-width: 1024px) {
