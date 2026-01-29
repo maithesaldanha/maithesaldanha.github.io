@@ -129,6 +129,19 @@
       padding: 4px;
     }
 
+    .profile-inline {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.profile-note {
+  font-size: 0.7rem;
+  opacity: 0.55;
+  max-width: 160px;
+  line-height: 1.4;
+}
+
     .chips {
       display: flex;
       flex-wrap: wrap;
@@ -217,7 +230,10 @@
 
     <p class="muted">Software Developer · Rio Grande do Sul, Brazil · +55 (53) 999060775</p>
 
-    <img src="assets/img/profile.jpg" alt="Profile" class="profile-pic" />
+    <div class="profile-inline">
+     <img src="assets/img/profile.jpg" alt="Profile" class="profile-pic" />
+     <p class="profile-note">human behind the code.</p>
+    </div>
 
     <h2>PROFILE</h2>
     <p>
