@@ -5,86 +5,338 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maithê Saldanha — Software Engineer</title>
 
-  
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --fg: #e6e6e6;
+      --muted: rgba(255,255,255,0.55);
+      --line: rgba(255,255,255,0.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* scanlines + noise */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.035),
+          rgba(255,255,255,0.035) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+      pointer-events: none;
+      mix-blend-mode: overlay;
+      z-index: 1;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2"/></filter><rect width="100" height="100" filter="url(%23n)" opacity="0.04"/></svg>');
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hud {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 260px 1fr 300px;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .panel::before {
+      content: "SYS";
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      font-size: 0.6rem;
+      opacity: 0.4;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      letter-spacing: 4px;
+      margin: 0 0 1.5rem 0;
+      position: relative;
+    }
+
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 2px;
+      top: 0;
+      opacity: 0.25;
+    }
+
+    h2 {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      margin: 3rem 0 1rem 0;
+    }
+
+    h2::before {
+      content: "+ ";
+      opacity: 0.5;
+    }
+
+    p { margin: 0.5rem 0; }
+
+    .muted { opacity: 0.6; }
+
+    .terminal-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2rem 0;
+    }
+
+    .terminal-menu li {
+      margin-bottom: 0.4rem;
+      opacity: 0.8;
+    }
+
+    .profile-pic {
+      width: 180px;
+      display: block;
+      margin: 2rem 0;
+      filter: grayscale(100%) contrast(120%);
+      border: 1px solid var(--line);
+      padding: 4px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .chips span {
+      border: 1px solid var(--line);
+      padding: 0.3rem 0.6rem;
+      font-size: 0.7rem;
+    }
+
+    .job { margin-top: 1.8rem; }
+
+    .job h3 {
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+
+    .job h3 span {
+      opacity: 0.6;
+      font-weight: normal;
+    }
+
+    .job time {
+      font-size: 0.7rem;
+      opacity: 0.5;
+    }
+
+    .job ul {
+      margin: 0.6rem 0 0 0;
+      padding-left: 1rem;
+    }
+
+    .tech-list div {
+      border: 1px solid var(--line);
+      padding: 0.5rem;
+      margin-bottom: 0.4rem;
+      text-align: center;
+      font-size: 0.75rem;
+    }
+
+    .contact a {
+      display: inline-block;
+      margin: 0.4rem 0.4rem 0 0;
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--line);
+      color: var(--fg);
+      text-decoration: none;
+      font-size: 0.7rem;
+    }
+
+    @media (max-width: 1024px) {
+      .hud {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <main class="container">
+<div class="hud">
 
-    <header class="hero">
-      <div class="hero-text">
-        <h1 class="glitch">MAI SALDANHA</h1>
-        <p class="tagline">i turn caffeine into code.</p>
-      </div>
+  <aside class="panel">
+    <p class="muted">_ session start</p>
+<ul class="about">
+      <p> welcome </p>
+      <p> interface ready </p>
+      <p> feel free to explore </p>
+      <p> code, solve, repeat </p>
+    </ul>
 
-      <img src="assets/img/profile.jpg" alt="Mai Saldanha portrait" />
-    </header>
+    <h2>ABOUT</h2>
+    <p>
+      I’m a software engineer who enjoys the process as much as the result. I turn caffeine into code, 
+      like digging into complex problems, and enjoy learning new things along the way. 
+      I care about building clean, scalable software that people can rely on day to day.
+    </p>
+  </aside>
 
-    <section>
-      <h2>ABOUT</h2>
-      <p>
-        Software engineer focused on building scalable systems and clean architectures.
-        I enjoy transforming complex problems into elegant solutions — always curious,
-        always evolving.
-      </p>
-    </section>
+  <!-- CENTER PANEL -->
+  <main class="panel">
+    <h1 class="glitch" data-text="_MAI.SALDANHA">_MAI.SALDANHA</h1>
 
-    <section>
-      <h2>SKILLS</h2>
-      <div class="chips">
-        <span>TypeScript</span>
-        <span>React</span>
-        <span>Node.js</span>
-        <span>AWS</span>
-        <span>Docker</span>
-      </div>
-    </section>
+    <p class="muted">Software Developer · Rio Grande do Sul, Brazil · +55 (53) 999060775</p>
 
-    <section>
-      <h2>EXPERIENCE</h2>
+    <img src="assets/img/profile.jpg" alt="Profile" class="profile-pic" />
 
-      <div class="cards">
-        <div class="card">
-          <h3>Compass UOL</h3>
-          <small>Software Engineer · 2023 — 2025</small>
-          <p>React, Next.js, Node.js, NestJS, CI/CD, Kafka, RabbitMQ.</p>
-        </div>
+    <h2>PROFILE</h2>
+    <p>
+      I’m a Senior Full-Stack Developer who enjoys both working independently and collaborating with others. 
+      I like being challenged, thinking things through, and taking responsibility for what I build.
+      I’m naturally curious, comfortable with complexity, and motivated by environments where people trust each other and work toward something meaningful.
+    </p>
 
-        <div class="card">
-          <h3>SpraySolutions</h3>
-          <small>Software Engineer · 2023</small>
-          <p>Image processing, Java, Python, Ionic, React, team leadership.</p>
-        </div>
-      </div>
-    </section>
+    <div class="chips">
+      <span>TYPESCRIPT</span><span>JAVASCRIPT</span><span>JAVA</span>
+      <span>REACT</span><span>ANGULAR</span><span>Spring Boot</span><span>NODE.JS</span><span>NESTJS</span><span>Spring Boot</span><span>Jest</span><span>JUnit</span>
+      <span>AWS</span><span>DOCKER</span><span>KAFKA</span><span>MongoDB</span>
+    </div>
 
-    <section>
-      <h2>LANGUAGES</h2>
+    <h2>PROFESSIONAL EXPERIENCE</h2>
+
+    <div class="job">
+      <h3>COMPASS UOL <span>Software Engineer</span></h3>
+      <time>2023 — 2025</time>
       <ul>
-        <li>English — Advanced</li>
-        <li>German — Intermediate</li>
-        <li>Spanish — Intermediate</li>
+        <li>React, Next.js and Mística Design System (Meu Vivo)</li>
+        <li>BFFs and microservices with Node.js & NestJS</li>
+        <li>Automated tests with Jest, JUnit, Cucumber and Stryker</li>
+        <li>CI/CD pipelines using Azure DevOps</li>
+        <li>Kafka and RabbitMQ messaging systems</li>
       </ul>
-    </section>
+    </div>
 
-    <section>
-      <h2>REACH OUT</h2>
-      <div class="contact">
-        <a href="mailto:maithesferrao@gmail.com">EMAIL</a>
-        <a href="https://wa.me/5553999060775" target="_blank">WHATSAPP</a>
-        <a href="https://linkedin.com/in/maithesaldanha-242138207/" target="_blank">LINKEDIN</a>
-      </div>
-    </section>
+    <div class="job">
+      <h3>SPRAYSOLUTIONS <span>Software Engineer</span></h3>
+      <time>2023</time>
+      <ul>
+        <li>Image processing with Java (ImageJ)</li>
+        <li>Mobile apps with Ionic, React and TypeScript</li>
+        <li>Deep Learning models in Python</li>
+        <li>Led and mentored junior developers.</li>
+      </ul>
+    </div>
 
-    <footer>
-      © 2026 · Maithê Saldanha
-    </footer>
+    <div class="job">
+      <h3>IGILE <span>Junior Software Engineer</span></h3>
+      <time>2022</time>
+      <ul>
+        <li>Front-end with React, ViteJS and Stitches</li>
+        <li>REST API integrations</li>
+        <li>Azure CosmosDB (NoSQL)</li>
+      </ul>
+    </div>
+
+    <div class="job">
+  <h3>DBSERVER <span>Junior Software Engineer</span></h3>
+  <time>2021 — 2022</time>
+  <ul class="job-list">
+    <li>Developed web applications using Angular, Django, Spring, and PostgreSQL</li>
+    <li>Built web-based games and interactive applications</li>
+    <li>Integrated front-end applications with REST APIs</li>
+    <li>Implemented automated tests using Karma, Jasmine, and JUnit</li>
+    <li>Collaborated in agile development environments</li>
+  </ul>
+</div>
 
   </main>
 
-  <script src="assets/js/main.js"></script>
+   <!-- RIGHT PANEL -->
+<aside class="panel">
+  <h2>EXTRA SKILLS</h2>
+  <div class="tech-list">
+    <div>Computer Technician</div>
+    <div>Hardware Maintenance & Troubleshooting</div>
+    <div>IT Technical Support</div>
+    <div>Arduino & Embedded Systems</div>
+    <div>Electronics Fundamentals</div>
+    <div>Process Organization</div>
+    <div>Documentation & Technical Writing</div>
+    <div>Microsoft Office & Spreadsheets</div>
+    <div>Mentoring Junior Developers</div>
+    <div>Time Management</div>
+  </div>
+
+    <h2>LANGUAGES</h2>
+    <p>English — Advanced</p>
+    <p>German — Intermediate</p>
+    <p>Spanish — Intermediate</p>
+
+    <h2>CONTACT</h2>
+    <div class="contact">
+      <a
+  href="mailto:maithesferrao@gmail.com?subject=Contact%20from%20your%20portfolio&body=Hi%20Maithê,%0D%0A%0D%0AI%20came%20across%20your%20profile%20and%20would%20love%20to%20connect.%20Let%20me%20know%20if%20you%E2%80%99re%20available%20for%20a%20quick%20conversation.%0D%0A%0D%0ABest%20regards,"
+>
+  EMAIL
+</a>
+
+      <a
+  href="https://wa.me/5553999060775?text=Oi%20Maithê,%20me%20interessei%20pelo%20seu%20perfil.%20Podemos%20marcar%20uma%20conversa?"
+  target="_blank"
+>
+  WHATSAPP
+</a>
+
+      <a href="https://linkedin.com/in/maithesaldanha" target="_blank">LINKEDIN</a>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  const title = document.querySelector('.glitch');
+
+  setInterval(() => {
+    if (Math.random() > 0.9) {
+      title.style.opacity = '0.6';
+      setTimeout(() => title.style.opacity = '1', 80);
+    }
+  }, 120);
+
+  setInterval(() => {
+    document.body.style.opacity = Math.random() > 0.98 ? '0.97' : '1';
+  }, 200);
+</script>
+
 </body>
 </html>
