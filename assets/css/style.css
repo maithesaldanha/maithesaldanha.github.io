@@ -1,0 +1,145 @@
+:root {
+  --bg: #0a0a0a;
+  --fg: #eaeaea;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.hud {
+  display: grid;
+  grid-template-columns: 260px 1fr 280px;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  min-height: 100vh;
+}
+
+.left-panel,
+.center-panel,
+.right-panel {
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 1.5rem;
+}
+
+.section-title {
+  margin-top: 2.5rem;
+  font-size: 0.9rem;
+}
+
+.section-title::before {
+  content: '+ ';
+  opacity: 0.5;
+}
+
+.terminal-menu {
+  padding: 0;
+}
+
+.terminal-menu li {
+  list-style: none;
+  margin-bottom: 0.4rem;
+  opacity: 0.8;
+}
+
+.small-text {
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.identity p {
+  margin: 0.2rem 0;
+  opacity: 0.8;
+}
+
+.profile-pic {
+  display: block;
+  width: 180px;
+  margin: 2rem 0;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 4px;
+  filter: grayscale(100%) contrast(120%);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.chips span {
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 0.3rem 0.6rem;
+  font-size: 0.7rem;
+}
+
+.job {
+  margin-top: 1.5rem;
+}
+
+.muted {
+  opacity: 0.6;
+}
+
+.tech-list div {
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 0.5rem;
+  margin-bottom: 0.4rem;
+  text-align: center;
+  font-size: 0.75rem;
+}
+
+.simple-list {
+  padding-left: 1rem;
+}
+
+.contact-links a {
+  display: inline-block;
+  margin-right: 0.6rem;
+  text-decoration: none;
+  color: var(--fg);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+}
+
+.glitch {
+  position: relative;
+  font-size: 2.4rem;
+  letter-spacing: 4px;
+}
+
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  top: 0;
+  opacity: 0.2;
+}
+
+@media (max-width: 1024px) {
+  .hud {
+    grid-template-columns: 1fr;
+  }
+}
