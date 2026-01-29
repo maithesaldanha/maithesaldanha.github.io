@@ -3,90 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maithê Saldanha — Software Engineer</title>
+  <title>Mai Saldanha — Software Engineer</title>
 
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <main class="container">
+<div class="hud">
 
-    <header class="hero">
-      <div class="hero-text">
-        <h1 class="glitch" data-text="MAI SALDANHA">MAI SALDANHA</h1>
+  <!-- LEFT PANEL -->
+  <aside class="left-panel">
+    <p class="terminal-line">_ welcome</p>
 
-        <p class="tagline">i turn caffeine into code.</p>
-      </div>
+    <ul class="terminal-menu">
+      <li>> projects</li>
+      <li>> experience</li>
+      <li>> contact</li>
+    </ul>
 
-      <img src="assets/img/profile.jpg" alt="Mai Saldanha portrait" />
-    </header>
+    <h2 class="section-title">PROFILE</h2>
+    <p class="small-text">
+      software engineer turning caffeine into code, crafting intuitive and
+      scalable systems through thoughtful code.
+    </p>
+  </aside>
 
-    <section>
-      <h2>ABOUT</h2>
-      <p>
-         Software engineer exploring the intersection between systems, interfaces,
-         and identity. I build reliable, scalable software while constantly questioning
-         how humans and machines connect.
-      </p>
+  <!-- CENTER PANEL -->
+  <main class="center-panel">
+    <h1 class="glitch" data-text="_MAI.SALDANHA">_MAI.SALDANHA</h1>
 
-    </section>
+    <div class="identity">
+      <p>> maithesferrao@gmail.com</p>
+      <p>> Dom Pedrito, Brazil</p>
+      <p>> github.com/maithesaldanha</p>
+      <p>> linkedin.com/in/maithesaldanha</p>
+    </div>
 
-    <section>
-      <h2>SKILLS</h2>
-      <div class="chips">
-        <span>TypeScript</span>
-        <span>React</span>
-        <span>Node.js</span>
-        <span>AWS</span>
-        <span>Docker</span>
-      </div>
-    </section>
+    <img src="assets/img/profile.jpg" alt="Profile" class="profile-pic">
 
-    <section>
-      <h2>EXPERIENCE</h2>
+    <h2 class="section-title">PROFILE</h2>
+    <p>
+      software engineer with a knack for building scalable systems and
+      solving complex problems through thoughtful code.
+    </p>
 
-      <div class="cards">
-        <div class="card">
-          <h3>Compass UOL</h3>
-          <small>Software Engineer · 2023 — 2025</small>
-          <p>React, Next.js, Node.js, NestJS, CI/CD, Kafka, RabbitMQ.</p>
-        </div>
+    <div class="chips">
+      <span>TYPESCRIPT</span>
+      <span>REACT</span>
+      <span>NODE.JS</span>
+      <span>AWS</span>
+      <span>PROBLEM SOLVING</span>
+    </div>
 
-        <div class="card">
-          <h3>SpraySolutions</h3>
-          <small>Software Engineer · 2023</small>
-          <p>Image processing, Java, Python, Ionic, React, team leadership.</p>
-        </div>
-      </div>
-    </section>
+    <h2 class="section-title">PROFESSIONAL EXPERIENCE</h2>
 
-    <section>
-      <h2>LANGUAGES</h2>
+    <div class="job">
+      <strong>COMPASS UOL</strong> — Software Engineer<br>
+      <span class="muted">2023 — Present</span>
       <ul>
-        <li>English — Advanced</li>
-        <li>German — Intermediate</li>
-        <li>Spanish — Intermediate</li>
+        <li>Developed features with React</li>
+        <li>Refined APIs & microservices with Node.js</li>
+        <li>Handled message brokering with Kafka & RabbitMQ</li>
       </ul>
-    </section>
+    </div>
 
-    <section>
-      <h2>REACH OUT</h2>
-      <div class="contact">
-        <a href="mailto:maithesferrao@gmail.com">EMAIL</a>
-        <a href="https://wa.me/5553999060775" target="_blank">WHATSAPP</a>
-        <a href="https://linkedin.com/in/maithesaldanha" target="_blank">LINKEDIN</a>
-      </div>
-    </section>
-
-    <footer>
-      © 2026 · Maithê Saldanha
-    </footer>
-
+    <div class="job">
+      <strong>SPRAYSOLUTIONS</strong> — Software Engineer<br>
+      <span class="muted">2023</span>
+      <ul>
+        <li>Processed agricultural spray data with Java & Python</li>
+        <li>Built spray analysis app with Ionic & React</li>
+      </ul>
+    </div>
   </main>
 
-  <script src="assets/js/main.js"></script>
+  <!-- RIGHT PANEL -->
+  <aside class="right-panel">
+    <h2 class="section-title">TECHNICAL SKILLS</h2>
+
+    <div class="tech-list">
+      <div>TYPESCRIPT</div>
+      <div>REACT</div>
+      <div>NODE.JS</div>
+      <div>AWS</div>
+      <div>POSTGRESQL</div>
+      <div>DOCKER</div>
+    </div>
+
+    <h2 class="section-title">LANGUAGES</h2>
+    <ul class="simple-list">
+      <li>English — Advanced</li>
+      <li>German — Intermediate</li>
+      <li>Spanish — Intermediate</li>
+    </ul>
+
+    <h2 class="section-title">REACH OUT</h2>
+    <div class="contact-links">
+      <a href="mailto:maithesferrao@gmail.com">EMAIL</a>
+      <a href="https://wa.me/5551999999999" target="_blank">WHATSAPP</a>
+      <a href="https://github.com/maithesaldanha" target="_blank">GITHUB</a>
+    </div>
+  </aside>
+
+</div>
+
+<script src="main.js"></script>
 </body>
 </html>
