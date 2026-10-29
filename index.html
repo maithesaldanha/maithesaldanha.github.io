@@ -466,15 +466,18 @@
         <h2>TERMINAL</h2>
         <div class="term" id="term" aria-label="Terminal interativo">
           <div id="out"></div>
-          <div class="in">
+          <form class="in" id="cmdform">
             <span>$</span
             ><input
               id="cmd"
               autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
               spellcheck="false"
+              enterkeyhint="send"
               aria-label="Digite um comando"
             />
-          </div>
+          </form>
         </div>
       </section>
 
@@ -513,6 +516,11 @@
           >
         </div>
       </section>
+
+      <footer>
+        build passed · feito à mão em HTML, CSS e JS puro · nenhum framework foi
+        ferido
+      </footer>
     </main>
 
     <div class="toast" id="toast" role="alert"></div>
@@ -725,14 +733,18 @@
       document
         .querySelectorAll("[data-c]")
         .forEach((a) => a.addEventListener("click", () => unlock("click")));
-      new IntersectionObserver(([e]) => {
-        if (e.isIntersecting) unlock("explore");
-      }).observe($("footer"));
-      $("#pic").onclick = () => {
-        $("#toast").textContent = "human behind the code.";
-        $("#toast").classList.add("show");
-        setTimeout(() => $("#toast").classList.remove("show"), 1800);
-      };
+      const ft = $("footer");
+      if (ft)
+        new IntersectionObserver(([e]) => {
+          if (e.isIntersecting) unlock("explore");
+        }).observe(ft);
+      const pic = $("#pic");
+      if (pic)
+        pic.onclick = () => {
+          $("#toast").textContent = "human behind the code.";
+          $("#toast").classList.add("show");
+          setTimeout(() => $("#toast").classList.remove("show"), 1800);
+        };
 
       /* contadores */
       const io = new IntersectionObserver((es) =>
@@ -785,8 +797,8 @@
           return null;
         },
       };
-      inp.addEventListener("keydown", (e) => {
-        if (e.key !== "Enter") return;
+      $("#cmdform").addEventListener("submit", (e) => {
+        e.preventDefault();
         const v = inp.value.trim().toLowerCase();
         inp.value = "";
         if (!v) return;
