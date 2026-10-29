@@ -1,449 +1,825 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maithê Saldanha — Software Engineer</title>
-
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg: #0b0b0b;
-      --fg: #e6e6e6;
-      --muted: rgba(255,255,255,0.55);
-      --line: rgba(255,255,255,0.25);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--fg);
-      font-family: 'Space Mono', monospace;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    /* scanlines + noise */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          rgba(255,255,255,0.035),
-          rgba(255,255,255,0.035) 1px,
-          transparent 1px,
-          transparent 3px
-        );
-      pointer-events: none;
-      mix-blend-mode: overlay;
-      z-index: 1;
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2"/></filter><rect width="100" height="100" filter="url(%23n)" opacity="0.04"/></svg>');
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .hud {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: 260px 1fr 300px;
-      gap: 1.5rem;
-      padding: 1.5rem;
-      min-height: 100vh;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      padding: 1.5rem;
-      position: relative;
-    }
-
-    .panel::before {
-      content: "SYS";
-      position: absolute;
-      top: -10px;
-      left: 10px;
-      font-size: 0.6rem;
-      opacity: 0.4;
-    }
-
-    h1 {
-      font-size: 2.4rem;
-      letter-spacing: 4px;
-      margin: 0 0 1.5rem 0;
-      position: relative;
-    }
-
-    .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 2px;
-      top: 0;
-      opacity: 0.25;
-    }
-
-    h2 {
-      font-size: 0.85rem;
-      letter-spacing: 2px;
-      margin: 3rem 0 1rem 0;
-    }
-
-    h2::before {
-      content: "+ ";
-      opacity: 0.5;
-    }
-
-    p { margin: 0.5rem 0; }
-
-    .muted { opacity: 0.6; }
-
-    .terminal-menu {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 2rem 0;
-    }
-
-    .terminal-menu li {
-      margin-bottom: 0.4rem;
-      opacity: 0.8;
-    }
-
-    .profile-pic {
-      width: 180px;
-      display: block;
-      margin: 2rem 0;
-      filter: grayscale(100%) contrast(120%);
-      border: 1px solid var(--line);
-      padding: 4px;
-    }
-
-    .profile-inline {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-.profile-note {
-  font-size: 0.7rem;
-  opacity: 0.55;
-  max-width: 160px;
-  line-height: 1.4;
-}
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 1rem;
-    }
-
-    .chips span {
-      border: 1px solid var(--line);
-      padding: 0.3rem 0.6rem;
-      font-size: 0.7rem;
-    }
-
-    .job { margin-top: 1.8rem; }
-
-    .job h3 {
-      font-size: 0.85rem;
-      letter-spacing: 1px;
-      margin: 0;
-    }
-
-    .job h3 span {
-      opacity: 0.6;
-      font-weight: normal;
-    }
-
-    .job time {
-      font-size: 0.7rem;
-      opacity: 0.5;
-    }
-
-    .job ul {
-      margin: 0.6rem 0 0 0;
-      padding-left: 1rem;
-    }
-
-    .tech-list div {
-      border: 1px solid var(--line);
-      padding: 0.5rem;
-      margin-bottom: 0.4rem;
-      text-align: center;
-      font-size: 0.75rem;
-    }
-
-    .contact a {
-      display: inline-block;
-      margin: 0.4rem 0.4rem 0 0;
-      padding: 0.3rem 0.6rem;
-      border: 1px solid var(--line);
-      color: var(--fg);
-      text-decoration: none;
-      font-size: 0.7rem;
-    }
-
-    /* ===== TABLET ===== */
-@media (max-width: 1024px) {
-  .hud {
-    grid-template-columns: 1fr;
-    gap: 1.2rem;
-    padding: 1rem;
-  }
-
-  h1 {
-    font-size: 2rem;
-    letter-spacing: 3px;
-  }
-
-  .profile-inline {
-    align-items: flex-start;
-  }
-
-  .profile-pic {
-    width: 150px;
-  }
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 600px) {
-  body {
-    font-size: 13px;
-  }
-
-  .hud {
-    padding: 0.8rem;
-    gap: 1rem;
-  }
-
-  .panel {
-    padding: 1rem;
-  }
-
-  h1 {
-    font-size: 1.6rem;
-    letter-spacing: 2px;
-  }
-
-  h2 {
-    margin-top: 2rem;
-  }
-
-  .profile-inline {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.6rem;
-  }
-
-  .profile-pic {
-    width: 100%;
-    max-width: 220px;
-  }
-
-  .profile-note {
-    max-width: 100%;
-  }
-
-  .chips {
-    gap: 0.4rem;
-  }
-
-  .chips span {
-    font-size: 0.65rem;
-  }
-
-  .job ul {
-    padding-left: 0.8rem;
-  }
-
-  .contact a {
-    display: block;
-    width: fit-content;
-  }
-}
-
-
-    @media (max-width: 1024px) {
-      .hud {
-        grid-template-columns: 1fr;
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maithê Saldanha — Engenheira de Software Full Stack + DevOps</title>
+    <meta
+      name="description"
+      content="Engenheira de Software Sênior: Go, Java, TypeScript, React, CI/CD, Docker, Kubernetes, AWS e Azure."
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0b0b0b;
+        --fg: #e6e6e6;
+        --line: rgba(255, 255, 255, 0.22);
+        --fs: #7aa2ff;
+        --do: #ffb86b;
+        --ok: #8dffb0;
       }
-    }
-  </style>
-</head>
-<body>
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font:
+          14px/1.6 "Space Mono",
+          monospace;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 50;
+        mix-blend-mode: overlay;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.035) 0 1px,
+          transparent 1px 3px
+        );
+      }
+      a {
+        color: inherit;
+      }
+      :focus-visible {
+        outline: 2px solid var(--ok);
+        outline-offset: 2px;
+      }
 
-<div class="hud">
+      /* HUD fixo: nível, XP, conquistas */
+      .hud {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 0.6rem 1.2rem;
+        background: rgba(11, 11, 11, 0.92);
+        border-bottom: 1px solid var(--line);
+        font-size: 0.72rem;
+      }
+      .hud b {
+        letter-spacing: 2px;
+      }
+      .xp {
+        flex: 1;
+        min-width: 120px;
+        height: 8px;
+        border: 1px solid var(--line);
+      }
+      .xp i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--ok);
+        transition: width 0.5s;
+      }
+      .mode button {
+        font: inherit;
+        font-size: 0.72rem;
+        background: none;
+        color: var(--fg);
+        border: 1px solid var(--line);
+        padding: 0.25rem 0.6rem;
+        cursor: pointer;
+      }
+      .mode button[aria-pressed="true"][data-m="fs"] {
+        border-color: var(--fs);
+        color: var(--fs);
+      }
+      .mode button[aria-pressed="true"][data-m="do"] {
+        border-color: var(--do);
+        color: var(--do);
+      }
+      .mode button[aria-pressed="true"][data-m="all"] {
+        border-color: var(--ok);
+        color: var(--ok);
+      }
 
-  <aside class="panel">
-    <p class="muted">_ session start</p>
-<ul class="about">
-      <p> welcome </p>
-      <p> interface ready </p>
-      <p> feel free to explore </p>
-      <p> code, solve, repeat </p>
-    </ul>
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 2rem 1.2rem 6rem;
+      }
+      section {
+        margin-top: 4.5rem;
+      }
+      h2 {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        margin: 0 0 1.4rem;
+      }
+      h2::before {
+        content: "+ ";
+        opacity: 0.5;
+      }
 
-    <h2>ABOUT</h2>
-    <p>
-      I’m a software engineer who enjoys the process as much as the result. I turn caffeine into code, 
-      like digging into complex problems, and enjoy learning new things along the way. 
-      I care about building clean, scalable software that people can rely on day to day.
-    </p>
-  </aside>
+      /* hero */
+      .hero {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      h1 {
+        font-size: clamp(1.8rem, 6vw, 3.2rem);
+        letter-spacing: 4px;
+        margin: 0;
+        position: relative;
+        line-height: 1.1;
+      }
+      h1::after {
+        content: attr(data-t);
+        position: absolute;
+        left: 2px;
+        top: 0;
+        opacity: 0.25;
+        color: var(--fs);
+        pointer-events: none;
+      }
+      .sub {
+        margin: 0.8rem 0;
+        opacity: 0.7;
+      }
+      .pic {
+        width: 150px;
+        filter: grayscale(1) contrast(1.2);
+        border: 1px solid var(--line);
+        padding: 4px;
+        cursor: pointer;
+      }
+      .cta a,
+      .cta button {
+        display: inline-block;
+        margin: 0.4rem 0.4rem 0 0;
+        padding: 0.4rem 0.8rem;
+        border: 1px solid var(--line);
+        background: none;
+        color: var(--fg);
+        font: inherit;
+        font-size: 0.75rem;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .cta a:hover,
+      .cta button:hover {
+        border-color: var(--ok);
+        color: var(--ok);
+      }
 
-  <!-- CENTER PANEL -->
-  <main class="panel">
-    <h1 class="glitch" data-text="_MAI.SALDANHA">_MAI.SALDANHA</h1>
+      /* stats */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+      .stat {
+        border: 1px solid var(--line);
+        padding: 1rem;
+      }
+      .stat strong {
+        display: block;
+        font-size: 1.8rem;
+        color: var(--ok);
+      }
+      .stat span {
+        font-size: 0.72rem;
+        opacity: 0.6;
+      }
 
-    <p class="muted">Software Developer · Rio Grande do Sul, Brazil · +55 (53) 999060775</p>
+      /* fluxo commit -> produção */
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .node {
+        font: inherit;
+        font-size: 0.78rem;
+        background: none;
+        color: var(--fg);
+        border: 1px solid var(--line);
+        padding: 0.55rem 0.8rem;
+        cursor: pointer;
+      }
+      .node:hover {
+        border-color: var(--ok);
+      }
+      .node[aria-pressed="true"] {
+        border-color: var(--ok);
+        color: var(--ok);
+        background: rgba(141, 255, 176, 0.07);
+      }
+      .node.seen::after {
+        content: " ✔";
+        color: var(--ok);
+      }
+      .arr {
+        opacity: 0.4;
+      }
+      .detail {
+        margin-top: 1.2rem;
+        border: 1px solid var(--line);
+        padding: 1.2rem;
+        min-height: 170px;
+      }
+      .detail h3 {
+        margin: 0 0 0.6rem;
+        font-size: 0.9rem;
+      }
+      .detail p {
+        margin: 0.4rem 0;
+        max-width: 68ch;
+      }
+      .detail .src {
+        font-size: 0.7rem;
+        opacity: 0.55;
+      }
+      .prog {
+        font-size: 0.72rem;
+        opacity: 0.6;
+        margin: 0.8rem 0 0;
+      }
+      [data-r] {
+        transition: opacity 0.25s;
+      }
+      body[data-mode="fs"] [data-r="do"],
+      body[data-mode="do"] [data-r="fs"] {
+        opacity: 0.22;
+      }
+      li[data-r="fs"]::marker {
+        color: var(--fs);
+      }
+      li[data-r="do"]::marker {
+        color: var(--do);
+      }
+      .tag {
+        display: inline-block;
+        border: 1px solid var(--line);
+        padding: 0.15rem 0.5rem;
+        margin: 0 0.35rem 0.35rem 0;
+        font-size: 0.68rem;
+      }
+      .tag[data-r="fs"] {
+        border-color: var(--fs);
+        color: var(--fs);
+      }
+      .tag[data-r="do"] {
+        border-color: var(--do);
+        color: var(--do);
+      }
 
-    <div class="profile-inline">
-     <img src="assets/img/profile.jpg" alt="Profile" class="profile-pic" />
-     <p class="profile-note">human behind the code.</p>
+      /* skills */
+      .skills {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+      }
+      .grp {
+        border: 1px solid var(--line);
+        padding: 1rem;
+      }
+      .grp h3 {
+        margin: 0 0 0.8rem;
+        font-size: 0.78rem;
+        opacity: 0.8;
+      }
+
+      /* terminal */
+      .term {
+        border: 1px solid var(--line);
+        padding: 1rem;
+        height: 300px;
+        overflow: auto;
+        font-size: 0.8rem;
+        cursor: text;
+      }
+      .term p {
+        margin: 0.1rem 0;
+        white-space: pre-wrap;
+      }
+      .term .in {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .term input {
+        flex: 1;
+        background: none;
+        border: 0;
+        color: var(--ok);
+        font: inherit;
+        outline: 0;
+      }
+      .dim {
+        opacity: 0.55;
+      }
+
+      /* contato / conquistas */
+      .ach {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.6rem;
+      }
+      .a {
+        border: 1px solid var(--line);
+        padding: 0.6rem 0.8rem;
+        font-size: 0.75rem;
+        opacity: 0.35;
+      }
+      .a.on {
+        opacity: 1;
+        border-color: var(--ok);
+        color: var(--ok);
+      }
+      .toast {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 60;
+        background: var(--bg);
+        border: 1px solid var(--ok);
+        color: var(--ok);
+        padding: 0.7rem 1rem;
+        font-size: 0.78rem;
+        transform: translateY(150%);
+        transition: transform 0.35s;
+      }
+      .toast.show {
+        transform: none;
+      }
+      footer {
+        margin-top: 4rem;
+        font-size: 0.7rem;
+        opacity: 0.45;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+      @media (max-width: 600px) {
+        .pic {
+          width: 110px;
+        }
+      }
+    </style>
+  </head>
+  <body data-mode="all">
+    <div class="hud" role="status">
+      <b>LVL <span id="lvl">1</span></b>
+      <div class="xp" aria-label="XP"><i id="xpbar"></i></div>
+      <span
+        ><span id="xpn">0</span> XP · <span id="achn">0</span>/7
+        conquistas</span
+      >
+      <div class="mode" role="group" aria-label="Escolha sua classe">
+        <button data-m="all" aria-pressed="true">tudo</button>
+        <button data-m="fs" aria-pressed="false">fullstack</button>
+        <button data-m="do" aria-pressed="false">devops</button>
+      </div>
     </div>
 
-    <h2>PROFILE</h2>
-    <p>
-      I’m a Senior Full-Stack Developer who enjoys both working independently and collaborating with others. 
-      I like being challenged, thinking things through, and taking responsibility for what I build.
-      I’m naturally curious, comfortable with complexity, and motivated by environments where people trust each other and work toward something meaningful.
-    </p>
+    <main>
+      <header class="hero">
+        <img
+          class="pic"
+          id="pic"
+          src="assets/img/profile.jpg"
+          alt="Foto de Maithê Saldanha"
+          onerror="this.style.display = 'none'"
+        />
+        <div>
+          <h1 data-t="_MAI.SALDANHA">_MAI.SALDANHA</h1>
+          <p class="sub">
+            Engenheira de Software Sênior · Full Stack + DevOps &amp; Cloud<br />Rio
+            Grande do Sul, Brasil
+          </p>
+          <p style="max-width: 62ch">
+            Construo a aplicação, do frontend ao backend, e o pipeline que a
+            leva à produção. Código, entrega contínua e cloud sob o mesmo teto.
+          </p>
+          <div class="cta">
+            <a href="#pipeline">ver do commit ao deploy</a>
+            <a href="#terminal">abrir terminal</a>
+            <a href="#contato">contratar</a>
+          </div>
+          <p class="dim" style="font-size: 0.72rem">
+            dica: escolha uma classe no topo. Ela destaca o que importa para a
+            sua vaga.
+          </p>
+        </div>
+      </header>
 
-    <div class="chips">
-      <span>TYPESCRIPT</span><span>JAVASCRIPT</span><span>JAVA</span>
-      <span>REACT</span><span>ANGULAR</span><span>Spring Boot</span><span>NODE.JS</span><span>NESTJS</span><span>Spring Boot</span><span>Jest</span><span>JUnit</span>
-      <span>AWS</span><span>DOCKER</span><span>KAFKA</span><span>MongoDB</span>
-    </div>
+      <section aria-label="Números">
+        <div class="stats">
+          <div class="stat">
+            <strong data-n="10">0</strong><span>anos programando</span>
+          </div>
+          <div class="stat">
+            <strong data-n="5" data-s="+">0</strong
+            ><span>anos profissionais</span>
+          </div>
+          <div class="stat">
+            <strong data-n="6">0</strong><span>empresas e órgãos</span>
+          </div>
+          <div class="stat">
+            <strong>milhões</strong><span>de usuários no Meu Vivo</span>
+          </div>
+        </div>
+      </section>
 
-    <h2>PROFESSIONAL EXPERIENCE</h2>
+      <section id="pipeline">
+        <h2>DO COMMIT À PRODUÇÃO</h2>
+        <p class="dim" style="margin-top: -0.8rem">
+          A vida de uma feature, etapa por etapa. Clique para ver o que eu
+          construí em cada uma.
+        </p>
+        <div class="flow" id="flow"></div>
+        <div class="detail" id="detail" aria-live="polite"></div>
+        <p class="prog" id="prog"></p>
+        <p class="dim" style="font-size: 0.75rem">
+          Fora da esteira: já liderei e mentorei devs juniores e treinei um
+          modelo de Deep Learning em Python (SpraySolutions).
+        </p>
+      </section>
 
-    
-    <div class="job">
-  <h3>MINAS GERAIS STATE TREASURY DEPARTMENT <span>Software Engineer</span></h3>
-  <time>2025</time>
-  <ul>
-    <li>Developed and maintained features for the IPVA Digital system</li>
-    <li>Built REST APIs using Java and Spring Boot</li>
-    <li>Implemented secure authentication with JWT and Spring Security</li>
-    <li>Designed complex SQL queries integrating data from multiple government systems</li>
-    <li>Worked with large-scale fiscal and vehicle registration datasets</li>
-  </ul>
-</div>
+      <section>
+        <h2>INVENTÁRIO</h2>
+        <div class="skills" id="skills"></div>
+      </section>
 
-    <div class="job">
-      <h3>COMPASS UOL <span>Software Engineer</span></h3>
-      <time>2023 — 2025</time>
-      <ul>
-        <li>React, Next.js and Mística Design System (Meu Vivo)</li>
-        <li>BFFs and microservices with Node.js & NestJS</li>
-        <li>Automated tests with Jest, JUnit, Cucumber and Stryker</li>
-        <li>CI/CD pipelines using Azure DevOps</li>
-        <li>Kafka and RabbitMQ messaging systems</li>
-      </ul>
-    </div>
+      <section id="terminal">
+        <h2>TERMINAL</h2>
+        <div class="term" id="term" aria-label="Terminal interativo">
+          <div id="out"></div>
+          <div class="in">
+            <span>$</span
+            ><input
+              id="cmd"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Digite um comando"
+            />
+          </div>
+        </div>
+      </section>
 
-    <div class="job">
-      <h3>SPRAYSOLUTIONS <span>Software Engineer</span></h3>
-      <time>2023</time>
-      <ul>
-        <li>Image processing with Java (ImageJ)</li>
-        <li>Mobile apps with Ionic, React and TypeScript</li>
-        <li>Deep Learning models in Python</li>
-        <li>Led and mentored junior developers.</li>
-      </ul>
-    </div>
+      <section>
+        <h2>CONQUISTAS</h2>
+        <div class="ach" id="ach"></div>
+      </section>
 
-    <div class="job">
-      <h3>IGILE <span>Junior Software Engineer</span></h3>
-      <time>2022</time>
-      <ul>
-        <li>Front-end with React, ViteJS and Stitches</li>
-        <li>REST API integrations</li>
-        <li>Azure CosmosDB (NoSQL)</li>
-      </ul>
-    </div>
+      <section id="contato">
+        <h2>PRONTA PARA DEPLOY</h2>
+        <p>
+          Formação: Engenharia de Software (Unicesumar, em curso) · Bacharelado
+          em Física (UFSM) · Técnico em Informática (URCAMP)<br />
+          Idiomas: Português nativo · Inglês avançado · Alemão avançado ·
+          Espanhol intermediário
+        </p>
+        <div class="cta">
+          <a
+            href="mailto:maithesaldanha@outlook.com?subject=Contato%20pelo%20portf%C3%B3lio"
+            data-c
+            >email</a
+          >
+          <a
+            href="https://wa.me/5553999060775?text=Oi%20Maith%C3%AA%2C%20vi%20seu%20portf%C3%B3lio%20e%20queria%20conversar%20sobre%20uma%20oportunidade."
+            target="_blank"
+            rel="noopener"
+            data-c
+            >whatsapp</a
+          >
+          <a
+            href="https://linkedin.com/in/maithesaldanha"
+            target="_blank"
+            rel="noopener"
+            data-c
+            >linkedin</a
+          >
+        </div>
+      </section>
+    </main>
 
-    <div class="job">
-  <h3>DBSERVER <span>Junior Software Engineer</span></h3>
-  <time>2021 — 2022</time>
-  <ul class="job-list">
-    <li>Developed web applications using Angular, Django, Spring, and PostgreSQL</li>
-    <li>Built web-based games and interactive applications</li>
-    <li>Integrated front-end applications with REST APIs</li>
-    <li>Implemented automated tests using Karma, Jasmine, and JUnit</li>
-    <li>Collaborated in agile development environments</li>
-  </ul>
-</div>
+    <div class="toast" id="toast" role="alert"></div>
 
-  </main>
+    <script>
+      const nodes = [
+        [
+          "Frontend",
+          "fs",
+          "React · Next.js · TypeScript · Angular",
+          [
+            "Interfaces em React, Next.js e TypeScript para o Meu Vivo e o Meu Vivo Web, com milhões de usuários, focadas em performance e manutenção.",
+            "Também passei por Angular e por um app mobile multiplataforma com Ionic.",
+          ],
+          "Compass UOL",
+        ],
+        [
+          "BFF",
+          "fs",
+          "Node.js · NestJS",
+          [
+            "Backends-for-Frontend que desacoplam o frontend dos microsserviços.",
+          ],
+          "Compass UOL",
+        ],
+        [
+          "Serviços",
+          "fs",
+          "Go · Java · Spring Boot · REST · GraphQL · JWT",
+          [
+            "Go no ERP financeiro: módulo de notificações, módulo financeiro e integração entre serviços com GraphQL.",
+            "Java e Spring Boot no IPVA Digital: APIs REST e autenticação com JWT, refresh tokens e revogação.",
+          ],
+          "Conta Azul e Fazenda de MG",
+        ],
+        [
+          "Eventos",
+          "do",
+          "Kafka · RabbitMQ",
+          ["Integração de sistemas com arquitetura orientada a eventos."],
+          "Compass UOL",
+        ],
+        [
+          "Dados",
+          "fs",
+          "PostgreSQL · MongoDB · Cosmos DB · SQL",
+          [
+            "Consultas SQL complexas cruzando dados de vários sistemas tributários.",
+            "NoSQL com Azure Cosmos DB.",
+          ],
+          "Fazenda de MG e Igile",
+        ],
+        [
+          "Testes",
+          "fs",
+          "Jest · JUnit · Cucumber · Stryker.js",
+          [
+            "Testes automatizados e mutation testing com Stryker.js para dar confiança às entregas.",
+            "Ciclos de teste de features antes da liberação em produção.",
+          ],
+          "Compass UOL e Conta Azul",
+        ],
+        [
+          "CI/CD",
+          "do",
+          "Azure DevOps · Jenkins · Git",
+          ["Pipelines de entrega contínua para o Meu Vivo e o Meu Vivo Web."],
+          "Compass UOL",
+        ],
+        [
+          "Produção",
+          "do",
+          "Docker · Kubernetes · AWS · Azure · Backstage",
+          [
+            "Containers com Docker e Kubernetes, cloud em AWS e Azure, e Backstage (Software Templates / Scaffolder) na camada de plataforma.",
+          ],
+          "",
+        ],
+      ];
+      const skills = [
+        [
+          "Linguagens",
+          "fs",
+          ["Go", "Java", "Python", "TypeScript", "JavaScript", "SQL"],
+        ],
+        ["Frontend", "fs", ["React", "Next.js", "Angular", "Ionic", "Vite"]],
+        [
+          "Backend e APIs",
+          "fs",
+          ["Spring Boot", "Node.js", "NestJS", "REST", "GraphQL", "JWT"],
+        ],
+        ["Testes", "fs", ["Jest", "JUnit", "Cucumber", "Stryker.js"]],
+        [
+          "DevOps e CI/CD",
+          "do",
+          [
+            "Azure DevOps",
+            "Jenkins",
+            "Git",
+            "Pipelines CI/CD",
+            "Entrega contínua",
+          ],
+        ],
+        [
+          "Cloud e plataforma",
+          "do",
+          ["AWS", "Azure", "Docker", "Kubernetes", "Backstage"],
+        ],
+        [
+          "Arquitetura e dados",
+          "do",
+          [
+            "Microsserviços",
+            "Event-driven",
+            "Kafka",
+            "RabbitMQ",
+            "BFF",
+            "PostgreSQL",
+            "MongoDB",
+            "Cosmos DB",
+          ],
+        ],
+      ];
+      const $ = (s) => document.querySelector(s);
+      const esc = (t) =>
+        t.replace(
+          /[&<>]/g,
+          (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c],
+        );
 
-   <!-- RIGHT PANEL -->
-<aside class="panel">
-  <h2>EXTRA SKILLS</h2>
-  <div class="tech-list">
-    <div>Computer Technician</div>
-    <div>Hardware Maintenance & Troubleshooting</div>
-    <div>IT Technical Support</div>
-    <div>Arduino & Embedded Systems</div>
-    <div>Electronics Fundamentals</div>
-    <div>Process Organization</div>
-    <div>Documentation & Technical Writing</div>
-    <div>Microsoft Office & Spreadsheets</div>
-    <div>Mentoring Junior Developers</div>
-    <div>Time Management</div>
-  </div>
+      $("#skills").innerHTML = skills
+        .map(
+          ([n, r, l]) =>
+            `<div class="grp" data-r="${r}"><h3>${n}</h3>${l.map((t) => `<span class="tag" data-r="${r}">${t}</span>`).join("")}</div>`,
+        )
+        .join("");
 
-    <h2>LANGUAGES</h2>
-    <p>English — Advanced</p>
-    <p>German — Intermediate</p>
-    <p>Spanish — Intermediate</p>
+      $("#flow").innerHTML = nodes
+        .map(
+          (n, i) =>
+            `${i ? '<span class="arr" aria-hidden="true">→</span>' : ""}<button class="node" data-r="${n[1]}" data-i="${i}" aria-pressed="false">${n[0]}</button>`,
+        )
+        .join("");
+      const seen = new Set();
+      function show(i) {
+        const n = nodes[i];
+        document
+          .querySelectorAll(".node")
+          .forEach((b) => b.setAttribute("aria-pressed", +b.dataset.i === i));
+        document.querySelector(`.node[data-i="${i}"]`).classList.add("seen");
+        $("#detail").innerHTML = `<h3>${n[0]}</h3><p>${n[2]
+          .split(" · ")
+          .map((t) => `<span class="tag" data-r="${n[1]}">${t}</span>`)
+          .join(
+            "",
+          )}</p>${n[3].map((t) => `<p>${t}</p>`).join("")}${n[4] ? `<p class="src">onde: ${n[4]}</p>` : ""}`;
+        seen.add(i);
+        $("#prog").textContent =
+          `${seen.size}/${nodes.length} etapas visitadas`;
+        if (seen.size === nodes.length) unlock("prod");
+      }
+      document
+        .querySelectorAll(".node")
+        .forEach((b) => (b.onclick = () => show(+b.dataset.i)));
+      show(0);
 
-    <h2>CONTACT</h2>
-    <div class="contact">
-<a href="mailto:maithesferrao@gmail.com?subject=Portfolio%20Contact&body=Hello%20Maithê,%0D%0A%0D%0AI%20visited%20your%20portfolio%20and%20would%20like%20to%20talk%20about%20opportunities.%0D%0A%0D%0ABest%20regards.">
-  EMAIL
-</a>
+      /* gamificação */
+      const A = {
+        explore: "Explorador: chegou ao fim da página",
+        dual: "Dupla classe: testou fullstack e devops",
+        hack: "Hacker: executou um comando",
+        click: "Contato iniciado: clicou em um link",
+        konami: "Código secreto: Konami",
+        hire: "Aprovada: sudo hire maithe",
+        prod: "Em produção: percorreu todas as etapas",
+      };
+      $("#ach").innerHTML = Object.entries(A)
+        .map(([k, v]) => `<div class="a" id="a-${k}">${v}</div>`)
+        .join("");
+      let xp = 0;
+      const got = new Set(),
+        modes = new Set();
+      function unlock(k) {
+        if (got.has(k)) return;
+        got.add(k);
+        xp += 20;
+        $("#a-" + k).classList.add("on");
+        $("#xpn").textContent = xp;
+        $("#achn").textContent = got.size;
+        $("#lvl").textContent = 1 + Math.floor(xp / 40);
+        $("#xpbar").style.width = Math.min(100, (xp / 140) * 100) + "%";
+        const t = $("#toast");
+        t.textContent = "+20 XP · " + A[k].split(":")[0];
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 2200);
+      }
+      document.querySelectorAll(".mode button").forEach(
+        (b) =>
+          (b.onclick = () => {
+            document.body.dataset.mode = b.dataset.m;
+            document
+              .querySelectorAll(".mode button")
+              .forEach((x) => x.setAttribute("aria-pressed", x === b));
+            if (b.dataset.m !== "all") {
+              modes.add(b.dataset.m);
+              if (modes.size === 2) unlock("dual");
+            }
+          }),
+      );
+      document
+        .querySelectorAll("[data-c]")
+        .forEach((a) => a.addEventListener("click", () => unlock("click")));
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) unlock("explore");
+      }).observe($("footer"));
+      $("#pic").onclick = () => {
+        $("#toast").textContent = "human behind the code.";
+        $("#toast").classList.add("show");
+        setTimeout(() => $("#toast").classList.remove("show"), 1800);
+      };
 
-      <a
-  href="https://wa.me/5553999060775?text=Oi%20Maith%C3%AA,%20tudo%20bem%3F%20Gostei%20muito%20do%20seu%20perfil%20e%20queria%20conversar%20melhor%20sobre%20oportunidades%20e%20ideias.%20Podemos%20agendar%20um%20hor%C3%A1rio%3F" target="_blank"
+      /* contadores */
+      const io = new IntersectionObserver((es) =>
+        es.forEach((e) => {
+          if (!e.isIntersecting) return;
+          io.unobserve(e.target);
+          const n = +e.target.dataset.n,
+            s = e.target.dataset.s || "";
+          let i = 0;
+          const t = setInterval(() => {
+            i++;
+            e.target.textContent = i + s;
+            if (i >= n) clearInterval(t);
+          }, 80);
+        }),
+      );
+      document.querySelectorAll("[data-n]").forEach((el) => io.observe(el));
 
->
-  WHATSAPP
-</a>
+      /* terminal */
+      const out = $("#out"),
+        inp = $("#cmd");
+      const say = (t, c = "") => {
+        const p = document.createElement("p");
+        p.className = c;
+        p.innerHTML = t;
+        out.appendChild(p);
+        $("#term").scrollTop = 1e5;
+      };
+      say("maithe-os v1.0 · digite <b>help</b> para ver os comandos", "dim");
+      const C = {
+        help: () =>
+          "whoami · stack · exp · devops · contact · clear · sudo hire maithe",
+        whoami: () =>
+          "Maithê Saldanha, Engenheira de Software Sênior (Full Stack + DevOps). 10 anos de código, 5+ profissionais.",
+        stack: () =>
+          "Go, Java, TypeScript, React, Next.js, Spring Boot, NestJS, Kafka, Docker, Kubernetes, AWS, Azure",
+        exp: () =>
+          "Conta Azul · Fazenda de MG · Compass UOL (Vivo) · SpraySolutions · Igile · DBServer",
+        devops: () =>
+          "Azure DevOps, Jenkins, CI/CD, Docker, Kubernetes, AWS, Azure, Backstage. Pipelines do Meu Vivo, com milhões de usuários.",
+        contact: () =>
+          "maithesaldanha@outlook.com · +55 53 99906-0775 · linkedin.com/in/maithesaldanha",
+        ls: () => "pipeline/  skills/  contato/",
+        "sudo hire maithe": () => {
+          unlock("hire");
+          return "permissão concedida. Envie o convite para maithesaldanha@outlook.com 🚀";
+        },
+        clear: () => {
+          out.innerHTML = "";
+          return null;
+        },
+      };
+      inp.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter") return;
+        const v = inp.value.trim().toLowerCase();
+        inp.value = "";
+        if (!v) return;
+        say("$ " + esc(v), "dim");
+        unlock("hack");
+        const r = C[v];
+        const res = r ? r() : `comando não encontrado: ${esc(v)}. Tente help.`;
+        if (res) say(res);
+      });
+      $("#term").onclick = () => inp.focus();
 
-      <a href="https://linkedin.com/in/maithesaldanha" target="_blank">LINKEDIN</a>
-    </div>
-  </aside>
-
-</div>
-
-<script>
-  const title = document.querySelector('.glitch');
-
-  setInterval(() => {
-    if (Math.random() > 0.9) {
-      title.style.opacity = '0.6';
-      setTimeout(() => title.style.opacity = '1', 80);
-    }
-  }, 120);
-
-  setInterval(() => {
-    document.body.style.opacity = Math.random() > 0.98 ? '0.97' : '1';
-  }, 200);
-</script>
-
-</body>
+      /* konami */
+      const K = [
+        "ArrowUp",
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowLeft",
+        "ArrowRight",
+        "b",
+        "a",
+      ];
+      let ki = 0;
+      addEventListener("keydown", (e) => {
+        if (e.target === inp) return;
+        ki = e.key === K[ki] ? ki + 1 : e.key === K[0] ? 1 : 0;
+        if (ki === K.length) {
+          ki = 0;
+          unlock("konami");
+        }
+      });
+    </script>
+  </body>
 </html>
